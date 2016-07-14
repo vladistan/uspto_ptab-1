@@ -52,6 +52,7 @@ strings = (
     "fig_qt",
     "indp_claim_qt",
     "efctv_claims_qt",
+    "staging_src_path",
 )
 
 
