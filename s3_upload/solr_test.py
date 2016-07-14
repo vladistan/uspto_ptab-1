@@ -1,5 +1,5 @@
 import pytest
-from solr import Solr
+from solr import Solr, SolrException
 
 
 @pytest.fixture
@@ -14,5 +14,6 @@ def test_we_can_poke_solr(solr):
 
 
 def test_we_can_add_field(solr):
-    rv = solr.add_field('s3_url', type="string", multi_valued=False)
-    assert rv == 0
+    with pytest.raises(SolrException):
+        rv = solr.add_field('s3_url', type="string", multi_valued=False)
+        assert rv == 0
