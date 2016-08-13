@@ -2,4 +2,12 @@ echo "Hello I am pull from S3 to SOLR Job"
 
 echo "I am running on "  $(hostname)
 
+cat > S3ToSOLRTrackTable.csv <<EOF
 
+This is S3 TO SOLR Tracking Table
+
+Generated on $(hostname)
+
+At $(date)
+
+EOF
