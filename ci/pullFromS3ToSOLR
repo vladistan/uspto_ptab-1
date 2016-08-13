@@ -4,11 +4,15 @@ echo "I am running on "  $(hostname)
 
 echo "My Index is ${GO_JOB_RUN_INDEX}"
 
-cat > S3ToSOLRTrackTable-${GO_JOB_RUN_INDEX}.csv <<EOF
+mkdir -p s3-to-solr-track
+
+cat > s3-to-solr-track/S3ToSOLRTrackTable.csv <<EOF
 
 This is S3 TO SOLR Tracking Table
 
 Generated on $(hostname)
+
+Job Index ${GO_JOB_RUN_INDEX} / ${GO_JOB_RUN_COUNT}
 
 At $(date)
 
