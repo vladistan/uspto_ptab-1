@@ -4,4 +4,6 @@ echo "I got this file from upstream"
 
 find .
 
-cat trackTable
+cat ./s3-to-solr-*/*/*
+
+
