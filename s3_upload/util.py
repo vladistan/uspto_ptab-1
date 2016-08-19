@@ -1,5 +1,6 @@
 import json
 import math
+import os
 from datetime import datetime
 import time
 
@@ -36,7 +37,7 @@ class Util(object):
                 continue
             elif k == 'file_dt':
                 if type(obj[k]) != float and '-' in obj[k]:
-                    obj[k] = '{:.0f}'.format(Util.convertToUTC(obj[k], '%d-%b-%y'))
+                    obj[k] = '{:.0f}'.format(Util.convertToUTC(obj[k]))
                 else:
                     obj[k] = '{:.0f}'.format(obj[k])
             elif k == 'dn_dw_gau_cd':
@@ -54,6 +55,28 @@ class Util(object):
                 else:
                     obj[k] = trimmed
 
+            # Add back text formatted date fields
+
+            if k[-3:] == "_dt":
+
+                obj["drv_txt_" + k] = Util.convertUTCtoText(obj[k])
+
+            if k == 'docdate':
+                obj["drv_txt_docdate" ] = Util.convertUTCtoText(obj[k])
+
+        # Add unique_id field   appid + ifnum
+        obj['drv_uniq_id'] = obj['appid'] + '-' + obj['ifwnumber']
+
+        # Add text field with 32K-1
+        obj['drv_short_textdata'] = obj['textdata'][0:32000]
+
+        # Add PROV Record wasDerivedFrom("S3URL",".","JOBURL")
+        if 'PIPELINE_URL' in os.environ:
+            pipeline_url = os.environ['PIPELINE_URL']
+        else:
+            pipeline_url = "unknown"
+
+        obj['prov'] = 'wasDerivedFrom("%s",".","%s")' % (src_url, pipeline_url)
 
         return json.dumps(obj)
 
@@ -82,3 +105,13 @@ class Util(object):
         else:
             dt = ''
         return dt
+
+
+    @classmethod
+    # convert day-month-year to UTC timestamp
+    def convertUTCtoText(cls, date, format='%m/%d/%Y'):
+        if type(date) is str:
+            date = int(date)
+        dt = datetime.utcfromtimestamp(date)
+        txt = dt.strftime(format)
+        return txt

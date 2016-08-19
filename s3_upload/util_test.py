@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 
@@ -27,6 +29,10 @@ def json_doc_4():
 @pytest.fixture
 def json_doc_5_wes():
     return load_file("test_fixtures/test14w_33_1.json")
+
+@pytest.fixture
+def json_doc_6_froms3():
+    return load_file("test_fixtures/test13s3_06.json")
 
 
 def load_file(name):
@@ -65,6 +71,12 @@ def test_we_get_correct_secondary_log_dir(util):
     assert sec_dir == '13s/1312/347/8'
 
 
+def test_we_can_convert_date_to_text(util):
+
+    rv = util.convertUTCtoText("1471553120")
+    assert rv == "08/18/2016"
+
+
 
 def test_can_parse_json_file(util, json_doc):
 
@@ -87,6 +99,29 @@ def test_can_reprocess_document(util, json_doc):
     assert '"s3_url": "13/0000_XXX' in jsontext
 
 
+def test_that_we_reprocess_s3_file(util, json_doc_6_froms3):
+
+    os.environ["PIPELINE_URL"] = 'http://scheduler.bdr.uspto.gov/go/tab/build/detail/Test/12/CMS_Pull/1/ComputeDelta'
+
+    fd = open("before.doc.json", "wb")
+    fd.write(json_doc_6_froms3)
+
+    jsontext = util.reprocess_document(json_doc_6_froms3, '13/0000_XXX')
+
+    fd = open("reprocessed_doc.json", "wb")
+    fd.write(jsontext.encode("utf-8"))
+
+
+    assert type(jsontext) == str
+    assert '"s3_url": "13/0000_XXX' in jsontext
+    assert "drv_txt_patent_issue_dt" in jsontext
+    assert '"drv_txt_patent_issue_dt": "04/07/2015"' in jsontext
+    assert '"drv_uniq_id": "13000006-HP5IYPUSPXXIFW4"' in jsontext
+    assert '"drv_short_textdata": "DETAILED ACTION' in jsontext
+    assert '"prov": "wasDerivedFrom(\\\"13/0000_XXX\\\",' \
+           '\\\".\\\",\\\"http://scheduler.bdr.uspto.gov/go/tab/' \
+           'build/detail/Test/12/CMS_Pull/1/ComputeDelta\\\")",' in jsontext
+
 def test_reprocess_removes_NaN_from_dn_intppty_cust_no(util, json_doc_2):
 
     jsontext = util.reprocess_document(json_doc_2, '13/0000_XXX')
@@ -108,7 +143,7 @@ def test_reprocess_preserves_good_wipo_pub_no (util, json_doc_3):
 
     jsontext = util.reprocess_document(json_doc_3, '13/0000_XXX')
 
-    assert '"wipo_pub_no": "122334",' in jsontext
+    assert '"wipo_pub_no": "122334"' in jsontext
 
 
 
