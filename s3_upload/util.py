@@ -61,8 +61,8 @@ class Util(object):
 
                 obj["drv_txt_" + k] = Util.convertUTCtoText(obj[k])
 
-            if k == 'docdate':
-                obj["drv_txt_docdate" ] = Util.convertUTCtoText(obj[k])
+            if k == 'doc_date':
+                obj["drv_txt_doc_date" ] = Util.convertUTCtoText(obj[k])
 
         # Add unique_id field   appid + ifnum
         obj['drv_uniq_id'] = obj['appid'] + '-' + obj['ifwnumber']

@@ -116,6 +116,7 @@ def test_that_we_reprocess_s3_file(util, json_doc_6_froms3):
     assert '"s3_url": "13/0000_XXX' in jsontext
     assert "drv_txt_patent_issue_dt" in jsontext
     assert '"drv_txt_patent_issue_dt": "04/07/2015"' in jsontext
+    assert '"drv_txt_doc_date": ""' in jsontext
     assert '"drv_uniq_id": "13000006-HP5IYPUSPXXIFW4"' in jsontext
     assert '"drv_short_textdata": "DETAILED ACTION' in jsontext
     assert '"prov": "wasDerivedFrom(\\\"13/0000_XXX\\\",' \
