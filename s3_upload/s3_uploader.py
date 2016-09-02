@@ -92,5 +92,4 @@ class S3Uploader(object):
         return self.bucket.Object(key)
 
     def post_document(self, text, url):
-
-        self.bucket.put_object(Key=self.test_pfx + url, Body=text)
+        self.bucket.put_object(Key=url, Body=text)
